@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HypeHouse - Find Your Student Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#2563eb",
+                "background-light": "#f8f6f6",
+                "background-dark": "#0f172a",
+              },
+              fontFamily: {
+                "display": ["Public Sans"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.8) 100%);
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-center bg-no-repeat bg-cover" data-alt="Modern stylish student residence with minimalist furniture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_WcOVYb8K9T8gXed1RIU708WMivqvBQox_72VJRzHp5MFyb7BHEKpn7JbG5S_mDA62_PsynRwkzaZA5xNPZudZfoFJgTxZXBGNZN90d_oKBVEfV3A4Xpj05bo1ZdPtdEIEMjd83DAc0MdnnT3P78bZ-zC5VHwhTyMNKvoMWugnx2AEC-S13vf-DSHfptFxLZU22bKbLpbnlExjx-7EY9ZVct0c_eCBwyCHYF2b5xhbKLJOLpbxicxo_NptWTMqf2GOhI3TAhAJutO");'>
+</div>
+<div class="absolute inset-0 hero-overlay"></div>
+</div>
+<div class="relative z-10 flex flex-col justify-between min-h-screen">
+<header class="p-6 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-white text-2xl">domain</span>
+</div>
+<span class="text-white font-bold text-xl tracking-tight">HypeHouse</span>
+</div>
+<div class="liquid-glass rounded-full px-4 py-1">
+<span class="text-white text-sm font-medium">New York, NY</span>
+</div>
+</header>
+<div class="flex flex-col items-center px-6 pb-12 w-full max-w-xl mx-auto text-center">
+<div class="mb-8">
+<h1 class="text-white tracking-tight text-4xl sm:text-5xl font-bold leading-tight drop-shadow-lg">
+                    Explore beautiful homes near you
+                </h1>
+<p class="text-slate-200 text-lg font-normal mt-4 drop-shadow-md">
+                    Over 2,900 student-friendly homes waiting for you
+                </p>
+</div>
+<div class="flex flex-col gap-4 w-full">
+<button class="flex w-full cursor-pointer items-center justify-center rounded-xl h-14 bg-primary text-white text-lg font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+<span class="truncate">Get Started</span>
+</button>
+<button class="flex w-full cursor-pointer items-center justify-center rounded-xl h-14 liquid-glass text-white text-lg font-semibold hover:bg-white/20 transition-all">
+<span class="truncate">Login</span>
+</button>
+</div>
+<div class="mt-8 flex items-center gap-6">
+<div class="flex flex-col items-center">
+<span class="text-white font-bold text-xl">4.9</span>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+</div>
+<span class="text-slate-300 text-[10px] uppercase tracking-widest mt-1">App Rating</span>
+</div>
+<div class="w-px h-10 bg-white/20"></div>
+<div class="flex flex-col items-center text-white">
+<span class="font-bold text-xl">10k+</span>
+<span class="text-slate-300 text-[10px] uppercase tracking-widest mt-1">Active Students</span>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="Student user 1" class="inline-block h-8 w-8 rounded-full ring-2 ring-white/20" data-alt="Close up portrait of a student girl smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMzdgUfCKRSlVQceoSkeu55rmHk5ycS-QZDZTjZ7SNPkgCWR8n9ihNObp7YUwuOLlTjFPKxi8D9uSJVM8Mxa7O7Y7khSma0O15CMDysoPA82H25d6XeSU_Ab_qgyDTCCFxUvCFp8ivweijRIsGMVPqzyd_1as81ji7iTvlCugbebEsSsVyBMBrehuWwkc_qGfDuMe-Z2m0odHkHzYe-qkK9lt4daFDymGZ6O6acxENNaiAMsPsTo93DkIeBeVgtTCB2vsnN6iZOhYR"/>
+<img alt="Student user 2" class="inline-block h-8 w-8 rounded-full ring-2 ring-white/20" data-alt="Portrait of a young man smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANvjdi6TNvBhTdAquzFHUrK5VayubpBXPx9NfnEn8VpxqV3yRz9wpS9nNSJfWEoG6sJt0uPntjx-0xi_zHBp-R22L7SbNZ3v8j8Nn-Y8yacIJuTE4m4EiWaVtRbinypGdQjLlVHstPbV59lWMhmgPMHHVvK2WKWK4U4-SYS1C9JJLlZGt5yoxoeYuoAqWrD7Z55rw0kS0pivZU3JCOlibGyA_qzo4LgIocTMk3EHSxy368wyS2VwCWWYMeE2tl1wr7bJyEyEy2znqc"/>
+<img alt="Student user 3" class="inline-block h-8 w-8 rounded-full ring-2 ring-white/20" data-alt="Portrait of a woman with dark hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD71e6UGNx85zVLnrn4FDeuMHYWTPoW5VWCLbHFMXmz2u-PFVJQ_PmiDgCVGqyvvRu2x9RVg-HSq9cs9sj2TWbj-GYP3Y8VQvwi3mk5ONT4LRBfjlk3aiN_5rbX6BsKVbyh-aa4Rf9L7pCQFPjO8CxNCKy0EpvfVQHOM1RPpkUx-75-jkeE1XCyXQ2AkHKhlfdh-ALx3Hj2h1OGS3If-4zcydkw9zDkyw226M9H0_DvbTPBiWDs_SO6IkyByNOEifzt-vmMynO_HgD8"/>
+<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary ring-2 ring-white/20 text-[10px] font-bold text-white">
+                        +2k
+                    </div>
+</div>
+</div>
+</div>
+<div class="flex justify-center pb-6">
+<div class="w-32 h-1 bg-white/30 rounded-full"></div>
+</div>
+</div>
+</div>
+</body></html>

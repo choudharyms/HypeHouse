@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HypeHouse - Bookings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3b82f6", // Overriding primary to Blue as requested
+                "background-light": "#f8fafc",
+                "background-dark": "#0f172a",
+              },
+              fontFamily: {
+                "display": ["Public Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center p-4 justify-between max-w-lg mx-auto w-full">
+<button class="text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold tracking-tight text-center flex-1 pr-10">My Bookings</h2>
+</div>
+<!-- Tabs -->
+<div class="max-w-lg mx-auto w-full px-4">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 pt-2" href="#">
+<p class="text-sm font-bold">Upcoming</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2" href="#">
+<p class="text-sm font-medium">Past</p>
+</a>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 max-w-lg mx-auto w-full p-4 space-y-6 pb-24">
+<section>
+<h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 px-1">Active Stay</h3>
+<!-- Glassmorphic Booking Card -->
+<div class="glass-card liquid-glass rounded-xl p-4 flex flex-col gap-4">
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-cover bg-center shrink-0" data-alt="Modern student hostel room with wooden desk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAV_esSJ_PdtW4OJ9ODsPfwdLwyJ2rriGorLTDLlK3hcH1EGhms0Aqypx9LY32hiuT4Fs68jCinDiykGUBIxYJkoMj9AhS4LtXBgrtn5ZU_gqTtJJ2P5SFnrKGEGBywYKssCBTWJMAVACYtpoyghTErtvOOxEQ78S1NJ9W7tdPKb0kQ1fytE3QFpn2y5OsSxgbPWJsry-d6CuY8ASlkcYGQj19ZYLY6KzhTCHrHAWGXPkPTmM9USZNwF5UF1fNMmNQpIHvT-EZ-j73G");'>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h4 class="font-bold text-lg leading-tight">Green Valley PG</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs">location_on</span> 
+                                North Campus, Delhi
+                            </p>
+</div>
+<div class="flex items-center gap-2">
+<span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200 dark:border-green-800">PAID</span>
+<span class="text-slate-400 dark:text-slate-500 text-xs">• Room 204B</span>
+</div>
+</div>
+</div>
+<div class="bg-white/40 dark:bg-slate-900/40 rounded-lg p-3 flex justify-between items-center">
+<div class="space-y-0.5">
+<p class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Stay Duration</p>
+<p class="text-sm font-semibold">12 Oct — 15 Nov, 2023</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all shadow-sm shadow-primary/20">
+                        View Details
+                    </button>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 px-1">Upcoming Bookings</h3>
+<div class="glass-card liquid-glass rounded-xl p-4 flex flex-col gap-4">
+<div class="flex gap-4">
+<div class="w-24 h-24 rounded-lg bg-cover bg-center shrink-0" data-alt="Luxurious PG single room with large window" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDku5WCnUfz-061ETwVqsNg39HigWFBC9aw8kfaI3p-QvgboVPS-CR5zPVFs3BP5rjUOeNG7p8Pe8iOmD-_Z8mGqYkxA3kiGjCVyjj-ITTow9-f2H5Q0yOSSn5UOhPjHHuVOS574tbyLB3JLJdpsdvixHNJutYHvuzy7HvXsOhjlzbLM0q4gaw2dWKCraSVW8Bk_ItQ6hRg9w3Zfb96lvwdDdLKSeXCgsKE2I_tHOjKWeqC3DXPbonlcVbJljQ4xI2OWE96biul44AW");'>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h4 class="font-bold text-lg leading-tight">Azure Elite Living</h4>
+<p class="text-slate-500 dark:text-slate-400 text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-xs">location_on</span> 
+                                Koramangala, Bangalore
+                            </p>
+</div>
+<div class="flex items-center gap-2">
+<span class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">PARTIAL</span>
+<span class="text-slate-400 dark:text-slate-500 text-xs">• Reserved</span>
+</div>
+</div>
+</div>
+<div class="bg-white/40 dark:bg-slate-900/40 rounded-lg p-3 flex justify-between items-center">
+<div class="space-y-0.5">
+<p class="text-[10px] uppercase font-bold text-slate-400 tracking-wide">Check-in Date</p>
+<p class="text-sm font-semibold">01 Dec, 2023</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white text-xs font-bold py-2 px-4 rounded-lg transition-all shadow-sm shadow-primary/20">
+                        View Details
+                    </button>
+</div>
+</div>
+</section>
+<!-- Empty state placeholder for visual balance -->
+<div class="py-8 flex flex-col items-center justify-center opacity-40">
+<span class="material-symbols-outlined text-4xl mb-2">history</span>
+<p class="text-xs font-medium">Scroll down for past bookings</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 h-24 bg-white border-t border-slate-100 flex items-center justify-around px-8 z-50">
+<button class="flex flex-col items-center gap-1.5 opacity-40">
+<div class="text-slate-900">
+<span class="material-symbols-outlined">home</span>
+</div>
+<span class="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 opacity-40">
+<div class="text-slate-900">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+<span class="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Saved</span>
+</button>
+<button class="flex flex-col items-center gap-1.5">
+<div class="text-primary">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Bookings</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 opacity-40">
+<div class="text-slate-900">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="text-[10px] font-bold text-slate-900 uppercase tracking-wider">Profile</span>
+</button>
+</nav>
+</body></html>
