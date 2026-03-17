@@ -24,8 +24,8 @@ export const Layout = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-white border-r border-slate-200/60 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         <div className="p-8 pb-10 flex items-center gap-4">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2.5 rounded-2xl text-white shadow-lg shadow-blue-500/30">
-            <ShieldCheck size={28} strokeWidth={2.5} />
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 rounded-2xl text-white shadow-lg shadow-blue-500/30 overflow-hidden w-12 h-12 flex items-center justify-center">
+            <img src="/logo.png" alt="HypeHouse Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="text-xl font-black text-slate-900 tracking-tight block">HypeHouse</span>
