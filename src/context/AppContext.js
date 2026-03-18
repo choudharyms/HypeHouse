@@ -14,8 +14,14 @@ export const AppProvider = ({ children }) => {
 
   // Initialize Auth & Data
   useEffect(() => {
+    let subscription;
+
     async function init() {
       try {
+        // Always fetch PGs first
+        const allPgs = await api.fetchPGs();
+        setPgs(allPgs);
+
         const session = await auth.getSession();
         if (session) {
           const profile = await auth.getMyProfile();
@@ -26,7 +32,7 @@ export const AppProvider = ({ children }) => {
           setBookings(myBookings);
 
           // Real-time listener for booking updates
-          const subscription = supabase
+          subscription = supabase
             .channel('student-bookings')
             .on('postgres_changes', {
               event: 'UPDATE',
@@ -39,19 +45,21 @@ export const AppProvider = ({ children }) => {
               );
             })
             .subscribe();
-            
-          return () => supabase.removeChannel(subscription);
         }
-        
-        const allPgs = await api.fetchPGs();
-        setPgs(allPgs);
       } catch (error) {
         console.error('Initialization error:', error);
       } finally {
         setIsLoading(false);
       }
     }
+    
     init();
+
+    return () => {
+      if (subscription) {
+        supabase.removeChannel(subscription);
+      }
+    };
   }, []);
 
   const toggleSaved = async (pgId) => {

@@ -5,7 +5,8 @@ import {
   StyleSheet, 
   ScrollView, 
   Pressable, 
-  Image 
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -21,7 +22,7 @@ const CATEGORIES = [
 
 export const HomeScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const { user, pgs } = useAppContext();
+  const { user, pgs, isLoading } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -131,7 +132,14 @@ export const HomeScreen = ({ navigation }) => {
         </Animated.View>
 
         {/* Listings */}
-        {filteredPGs.length > 0 ? (
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={[typography.bodyM, { color: colors.textSecondary, marginTop: spacing.md }]}>
+              Finding best PGs for you...
+            </Text>
+          </View>
+        ) : filteredPGs.length > 0 ? (
           <StackingCards 
             listings={filteredPGs} 
             onCardPress={(pg) => navigation.navigate('PGDetail', { pg })}
@@ -212,5 +220,11 @@ const styles = StyleSheet.create({
     padding: spacing.xxl,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loadingContainer: {
+    padding: spacing.xxl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
   },
 });
