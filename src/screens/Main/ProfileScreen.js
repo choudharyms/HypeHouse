@@ -55,11 +55,46 @@ export const ProfileScreen = ({ navigation }) => {
     { icon: LogOut, label: 'Logout', action: handleLogout, color: colors.red },
   ];
 
-  // Conditional rendering for loading or no user
-  if (isLoading || !user) {
+  // Handle Loading
+  if (isLoading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  // Handle Guest / Not Logged In
+  if (!user) {
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.header}>
+          <View style={{ width: 44 }} /> 
+          <Text style={[typography.headingM, { color: colors.textPrimary }]}>My Profile</Text>
+          <View style={{ width: 44 }} />
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <GlassCard style={styles.profileCard}>
+            <View style={styles.avatarSection}>
+               <View style={[styles.avatarImg, styles.avatarPlaceholder]}>
+                 <Text style={[typography.displayL, { color: colors.primary }]}>?</Text>
+               </View>
+               <Text style={[typography.headingL, { color: colors.textPrimary, marginTop: spacing.md }]}>Not Logged In</Text>
+               <Text style={[typography.bodyM, { color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xs }]}>
+                 Please log in to manage your bookings and saved properties.
+               </Text>
+            </View>
+            <Pressable 
+              onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Auth' }] })}
+              style={({ pressed }) => [
+                styles.loginBtn,
+                pressed && { opacity: 0.8 }
+              ]}
+            >
+              <Text style={styles.loginBtnText}>Log In / Sign Up</Text>
+            </Pressable>
+          </GlassCard>
+        </ScrollView>
       </View>
     );
   }
@@ -105,7 +140,7 @@ export const ProfileScreen = ({ navigation }) => {
 
             <View style={styles.statsRow}>
               <View style={styles.statBox}>
-                <Text style={[typography.headingM, { color: colors.textPrimary }]}>{bookings.length}</Text>
+                <Text style={[typography.headingM, { color: colors.textPrimary }]}>{(bookings || []).length}</Text>
                 <Text style={[typography.label, { color: colors.textSecondary }]}>Bookings</Text>
               </View>
               <View style={styles.statDivider} />
@@ -196,5 +231,23 @@ const styles = StyleSheet.create({
     width: 36, height: 36, borderRadius: radius.md,
     backgroundColor: colors.glassHighlight, alignItems: 'center', justifyContent: 'center',
     marginRight: spacing.md,
+  },
+  loginBtn: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    borderRadius: radius.lg,
+    alignItems: 'center',
+    marginTop: spacing.sm,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  loginBtnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });
