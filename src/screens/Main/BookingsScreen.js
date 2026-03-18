@@ -14,7 +14,7 @@ import { GlassCard } from '../../components/ui/GlassCard';
 import { useAppContext } from '../../context/AppContext';
 import { StatusPill } from '../../components/ui/StatusPill';
 
-const TAB_OPTIONS = ['Upcoming', 'Past'];
+const TAB_OPTIONS = ['Pending', 'Upcoming', 'Past'];
 
 export const BookingsScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();

@@ -45,7 +45,7 @@ export const ProfileScreen = ({ navigation }) => {
   };
 
   const handleAlert = (title) => Alert.alert(title, `${title} coming soon`);
-  const handleSupport = () => Linking.openURL('mailto:help@mycampuspg.com');
+  const handleSupport = () => Linking.openURL('mailto:support@hypehouse.com');
 
   const MENU_ITEMS = [
     { icon: Pencil, label: 'Edit Profile', action: () => navigation.navigate('EditProfile') },

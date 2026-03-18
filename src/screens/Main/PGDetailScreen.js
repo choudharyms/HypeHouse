@@ -20,7 +20,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { 
   ArrowLeft, Heart, Share, Wifi, Wind, MapPin, 
-  Car, Shield, Bath, Droplets, Tv, Utensils, Zap, Phone, MessageCircle 
+  Car, Shield, Bath, Droplets, Tv, Utensils, Zap, Phone, MessageCircle,
+  Calendar
 } from 'lucide-react-native';
 
 import { colors, radius, spacing, typography } from '../../theme/tokens';

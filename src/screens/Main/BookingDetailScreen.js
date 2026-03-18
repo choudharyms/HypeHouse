@@ -24,7 +24,7 @@ export const BookingDetailScreen = ({ route, navigation }) => {
   const { cancelBooking } = useAppContext();
 
   const handleDownload = () => Alert.alert("Receipt", "Receipt downloaded to your device.");
-  const handleSupport = () => Linking.openURL('mailto:support@mycampuspg.com');
+  const handleSupport = () => Linking.openURL('mailto:support@hypehouse.com');
   const handleCancel = () => {
     Alert.alert(
       "Cancel Booking",
@@ -164,7 +164,7 @@ export const BookingDetailScreen = ({ route, navigation }) => {
             style={{ marginBottom: spacing.sm }} 
             onPress={handleSupport}
           />
-          {booking.status === 'Upcoming' && (
+          {(booking.status === 'Upcoming' || booking.status === 'Pending') && (
             <GlassButton 
               label="Cancel Booking" 
               variant="destructive" 
