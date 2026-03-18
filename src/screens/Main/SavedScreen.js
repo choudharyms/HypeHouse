@@ -71,13 +71,13 @@ export const SavedScreen = ({ navigation }) => {
         <View style={styles.contentContainer}>
           <View style={styles.titleRow}>
             <Text style={[typography.headingM, styles.nameText]} numberOfLines={1}>{item.name}</Text>
-            <Text style={[typography.headingL, { color: colors.primary }]}>₹{(item.pricePerMonth || 0).toLocaleString()}</Text>
+            <Text style={[typography.headingL, { color: colors.primary }]}>₹{(item.price_per_month || 0).toLocaleString()}</Text>
           </View>
           <View style={styles.locationRow}>
             <MapPin size={12} color={colors.textSecondary} />
             <Text style={[typography.bodyS, styles.locationText]} numberOfLines={1}>{item.city || 'Location'}</Text>
             <View style={styles.dot} />
-            <Text style={[typography.label, { color: colors.textTertiary }]}>{item.distance_from_college}</Text>
+            <Text style={[typography.label, { color: colors.textTertiary }]}>{item.distance_from_college || '0.5'} km</Text>
           </View>
         </View>
       </Pressable>

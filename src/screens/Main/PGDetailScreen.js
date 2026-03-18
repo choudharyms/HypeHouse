@@ -51,7 +51,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
   const handleBookNow = () => {
     Alert.alert(
       "Confirm Booking",
-      `Are you sure you want to book ${pg.name} for ₹${pg.pricePerMonth.toLocaleString()}?`,
+      `Are you sure you want to book ${pg.name} for ₹${(pg.price_per_month || 0).toLocaleString()}?`,
       [
         { text: "Cancel", style: "cancel" },
         { 
@@ -68,7 +68,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
                checkOut: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
                status: 'Upcoming',
                paymentStatus: 'Pending',
-               totalAmount: pg.pricePerMonth * 11, // Standard 11 month agreement
+               totalAmount: (pg.price_per_month || 0) * 11, // Standard 11 month agreement
                paidAmount: 0,
              };
              addBooking(newBooking);
@@ -139,7 +139,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
               <Text style={[typography.headingL, { color: colors.textPrimary }]}>{pg.name}</Text>
               <View style={styles.locationWrap}>
                 <MapPin size={14} color={colors.textSecondary} style={{ marginRight: 4 }}/>
-                <Text style={[typography.bodyM, { color: colors.textSecondary }]}>{pg.location}</Text>
+                <Text style={[typography.bodyM, { color: colors.textSecondary }]}>{pg.city || 'Unknown'}</Text>
               </View>
             </View>
           </View>
@@ -154,7 +154,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
             {[
               { label: 'Type', value: pg.room_type || 'Single' },
               { label: 'Gender', value: pg.gender || 'Boys' },
-              { label: 'Distance', value: (pg.distance_from_college || '0 km').split(' ')[0] },
+              { label: 'Distance', value: `${pg.distance_from_college || '0.5'} km` },
               { label: 'Rooms', value: 'Furnished' }
             ].map((stat, i) => (
               <View key={i} style={styles.statTile}>
@@ -249,7 +249,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
         <View style={styles.bottomBarInner}>
           <View>
             <Text style={[typography.label, { color: colors.textSecondary }]}>Price / month</Text>
-            <Text style={[typography.headingL, { color: colors.textPrimary }]}>₹{pg.pricePerMonth.toLocaleString()}</Text>
+            <Text style={[typography.headingL, { color: colors.textPrimary }]}>₹{(pg.price_per_month || 0).toLocaleString()}</Text>
           </View>
           <View style={{ width: 160 }}>
             <GlassButton label="Book Now" onPress={handleBookNow} />

@@ -105,13 +105,13 @@ const PGCard = ({ item, index, onPress }) => {
               <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
               <View style={styles.locationRow}>
                 <MapPin size={11} color={colors.textSecondary} />
-                <Text style={styles.locationText} numberOfLines={1}> {item.location}</Text>
+                <Text style={styles.locationText} numberOfLines={1}> {item.city || item.location}</Text>
                 <View style={styles.dot} />
-                <Text style={styles.distanceText}>{item.distanceFromCollege}</Text>
+                <Text style={styles.distanceText}>{item.distance_from_college || '0.5'} km</Text>
               </View>
             </View>
             <View style={styles.priceBlock}>
-              <Text style={styles.price}>₹{(item.pricePerMonth || 0).toLocaleString()}</Text>
+              <Text style={styles.price}>₹{(item.price_per_month || 0).toLocaleString()}</Text>
               <Text style={styles.priceLabel}>/mo</Text>
             </View>
           </View>
@@ -119,7 +119,7 @@ const PGCard = ({ item, index, onPress }) => {
           {/* Meta chips row */}
           <View style={styles.metaRow}>
             <View style={styles.metaChip}>
-              <Text style={styles.metaChipText}>{item.type}</Text>
+              <Text style={styles.metaChipText}>{item.room_type || item.type}</Text>
             </View>
             <View style={styles.metaChip}>
               <Text style={styles.metaChipText}>{item.gender}</Text>

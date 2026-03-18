@@ -35,7 +35,7 @@ export const HomeScreen = ({ navigation }) => {
       const lowerQuery = searchQuery.toLowerCase();
       result = result.filter(
         pg => pg.name.toLowerCase().includes(lowerQuery) || 
-              pg.location.toLowerCase().includes(lowerQuery)
+              (pg.city && pg.city.toLowerCase().includes(lowerQuery))
       );
     }
 
@@ -47,9 +47,11 @@ export const HomeScreen = ({ navigation }) => {
       if (activeCategory === 'Boys PG') result = result.filter(pg => pg.gender === 'Boys');
       if (activeCategory === 'Co-ed') result = result.filter(pg => pg.gender === 'Co-ed');
       // Under ₹5k is a mock category that might yield 0 results with our current mockData prices
-      if (activeCategory === 'Under ₹5k') result = result.filter(pg => pg.pricePerMonth < 5000);
+      if (activeCategory === 'Under ₹5k') result = result.filter(pg => pg.price_per_month < 5000);
       // Near Campus would be another mock mapping, let's say < 1km
-      if (activeCategory === 'Near Campus') result = result.filter(pg => pg.distanceFromCollege.includes('m'));
+      if (activeCategory === 'Near Campus') result = result.filter(pg => 
+        pg.distance_from_college !== null && pg.distance_from_college <= 1
+      );
     }
 
     return result;
