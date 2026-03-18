@@ -21,9 +21,11 @@ export async function signIn({ email, password }) {
   })
   if (error) throw error
   
+  // Verify it's a student login
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
+    .eq('id', data.user.id)
     .single()
   
   if (profile?.role !== 'student') {

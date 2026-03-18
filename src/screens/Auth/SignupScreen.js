@@ -6,7 +6,9 @@ import {
   KeyboardAvoidingView, 
   Platform,
   ScrollView,
-  Pressable
+  Pressable,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { 
@@ -22,14 +24,18 @@ import { colors, typography, spacing, radius } from '../../theme/tokens';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlassInput } from '../../components/ui/GlassInput';
 import { GlassButton } from '../../components/ui/GlassButton';
+import * as auth from '../../lib/auth';
+import { useAppContext } from '../../context/AppContext';
 
 export const SignupScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { setUser } = useAppContext();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Password strength
   const getPasswordStrength = () => {
@@ -42,15 +48,10 @@ export const SignupScreen = ({ navigation }) => {
   const strength = getPasswordStrength();
   
   const strengthWidth = useSharedValue(0);
-  const strengthColor = useSharedValue(colors.red);
   
   useEffect(() => {
     const targetWidth = strength === 0 ? 0 : (strength / 3) * 100;
-    const targetColor = strength === 1 ? colors.red : (strength === 2 ? colors.amber : colors.green);
-    
     strengthWidth.value = withTiming(targetWidth, { duration: 300 });
-    // Note: Reanimated can't easily animate strings like colors natively without interpolateColor,
-    // so we'll just update it immediately or use it directly in rendering
   }, [strength]);
 
   const strengthStyle = useAnimatedStyle(() => ({
@@ -99,9 +100,20 @@ export const SignupScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSignup = () => {
-    if (validate()) {
+  const handleSignup = async () => {
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      await auth.signUpStudent({ name, email, password });
+      const profile = await auth.getMyProfile();
+      setUser(profile);
       navigation.replace('Main');
+    } catch (error) {
+      console.error('Signup error:', error);
+      Alert.alert("Signup Failed", error.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,7 +173,7 @@ export const SignupScreen = ({ navigation }) => {
                     secureTextEntry
                     icon={Lock}
                     error={errors.password}
-                    style={{ marginBottom: 0 }} // Remove default margin
+                    style={{ marginBottom: 0 }} 
                   />
                   {password.length > 0 && (
                     <View style={styles.strengthContainer}>
@@ -203,6 +215,7 @@ export const SignupScreen = ({ navigation }) => {
                   label="Create Account"
                   onPress={handleSignup}
                   fullWidth
+                  loading={loading}
                 />
               </Animated.View>
 
@@ -232,7 +245,7 @@ const styles = StyleSheet.create({
   orb2: { width: 250, height: 250, backgroundColor: 'rgba(16, 185, 129, 0.15)', bottom: -50, left: -100 },
   keyboardView: { flex: 1 },
   scrollContent: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: spacing.xl },
-  formCard: { padding: 28 }, // prompt specified literal padding 28 here or in login
+  formCard: { padding: 28 }, 
   header: { marginBottom: spacing.xl },
   passwordContainer: { marginBottom: spacing.base },
   strengthContainer: { marginTop: spacing.xs, paddingHorizontal: spacing.sm },

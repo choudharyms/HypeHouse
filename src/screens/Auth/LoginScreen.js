@@ -7,7 +7,8 @@ import {
   Platform,
   ScrollView,
   Pressable,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { 
@@ -23,12 +24,16 @@ import { colors, typography, spacing } from '../../theme/tokens';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlassInput } from '../../components/ui/GlassInput';
 import { GlassButton } from '../../components/ui/GlassButton';
+import * as auth from '../../lib/auth';
+import { useAppContext } from '../../context/AppContext';
 
 export const LoginScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const { setUser } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   // Orb animations
   const orb1TranslateY = useSharedValue(0);
@@ -70,9 +75,20 @@ export const LoginScreen = ({ navigation }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = () => {
-    if (validate()) {
+  const handleLogin = async () => {
+    if (!validate()) return;
+    
+    setLoading(true);
+    try {
+      await auth.signIn({ email, password });
+      const profile = await auth.getMyProfile();
+      setUser(profile);
       navigation.replace('Main');
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert("Login Failed", error.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,6 +157,7 @@ export const LoginScreen = ({ navigation }) => {
                   label="Login"
                   onPress={handleLogin}
                   fullWidth
+                  loading={loading}
                 />
               </Animated.View>
 
@@ -204,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
   },
   formCard: {
-    padding: 28, // Using literal value from prompt instead of nearest token
+    padding: 28, 
   },
   header: {
     marginBottom: spacing.xxl,
