@@ -71,8 +71,15 @@ export const AppProvider = ({ children }) => {
 
   const isSaved = (pgId) => savedPGIds.includes(pgId);
 
-  const addBooking = (booking) => {
-    setBookings((prev) => [booking, ...prev]);
+  const addBooking = async (bookingData) => {
+    try {
+      const newBooking = await api.createBooking(bookingData);
+      setBookings((prev) => [newBooking, ...prev]);
+      return newBooking;
+    } catch (error) {
+      console.error('Add booking error:', error);
+      throw error;
+    }
   };
 
   const cancelBooking = async (id) => {

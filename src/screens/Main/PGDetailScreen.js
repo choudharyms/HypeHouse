@@ -8,7 +8,12 @@ import {
   Pressable,
   Dimensions,
   Linking,
-  Alert
+  Alert,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -47,38 +52,53 @@ export const PGDetailScreen = ({ route, navigation }) => {
   const saved = isSaved(pg.id);
 
   const [expandedDesc, setExpandedDesc] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+  const [isBooking, setIsBooking] = useState(false);
 
   const handleBookNow = () => {
-    Alert.alert(
-      "Confirm Booking",
-      `Are you sure you want to book ${pg.name} for ₹${(pg.price_per_month || 0).toLocaleString()}?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Confirm", 
-          onPress: () => {
-             // add to bookings AppContext
-             const newBooking = {
-               id: `BK-${Math.floor(Math.random()*10000)}-NN`,
-               pgId: pg.id,
-               pgName: pg.name,
-               pgImage: pg.images[0],
-               roomNumber: 'Allocating...',
-               checkIn: new Date().toISOString().split('T')[0],
-               checkOut: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
-               status: 'Upcoming',
-               paymentStatus: 'Pending',
-               totalAmount: (pg.price_per_month || 0) * 11, // Standard 11 month agreement
-               paidAmount: 0,
-             };
-             addBooking(newBooking);
-             navigation.navigate('BookingsRoot'); // We will create this alias in MainStack if needed, or navigate to Tab
-             navigation.navigate('Bookings');
-          } 
-        }
-      ]
-    );
+    setShowBookingModal(true);
   };
+
+  const handleConfirmBooking = async () => {
+    if (!checkInDate || !checkOutDate) {
+      Alert.alert("Required", "Please enter both Check-in and Check-out dates.");
+      return;
+    }
+
+    // Basic date validation
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(checkInDate) || !dateRegex.test(checkOutDate)) {
+      Alert.alert("Invalid Format", "Please use YYYY-MM-DD format.");
+      return;
+    }
+
+    setIsBooking(true);
+    try {
+      const bookingData = {
+        pgId: pg.id,
+        checkIn: checkInDate,
+        checkOut: checkOutDate,
+        totalAmount: pg.price_per_month, // Just a placeholder for base amount
+        status: 'Pending'
+      };
+      
+      const result = await addBooking(bookingData);
+      setShowBookingModal(false);
+      Alert.alert(
+        "Request Sent!", 
+        "Your booking request has been sent to the owner. You can track the status in your Bookings tab.",
+        [{ text: "OK", onPress: () => navigation.navigate('Bookings') }]
+      );
+    } catch (error) {
+      console.error('Booking error:', error);
+      Alert.alert("Booking Failed", error.message || "Failed to create booking request.");
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
 
   const handleCall = () => {
     Linking.openURL(`tel:${pg.ownerPhone}`);
@@ -244,6 +264,72 @@ export const PGDetailScreen = ({ route, navigation }) => {
         </Animated.View>
       </ScrollView>
 
+      {/* Booking Modal */}
+      <Modal
+        visible={showBookingModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowBookingModal(false)}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <GlassCard style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={[typography.headingM, { color: colors.textPrimary }]}>Choose Stay Period</Text>
+              <Pressable onPress={() => setShowBookingModal(false)}>
+                <ArrowLeft size={20} color={colors.textSecondary} style={{ transform: [{ rotate: '90deg' }] }} />
+              </Pressable>
+            </View>
+
+            <View style={styles.modalBody}>
+              <View style={styles.inputGroup}>
+                <Text style={[typography.label, { color: colors.textSecondary, marginBottom: 8 }]}>Check-in Date</Text>
+                <View style={styles.inputWrap}>
+                  <Calendar size={16} color={colors.primary} style={{ marginRight: 8 }} />
+                  <TextInput
+                    placeholder="YYYY-MM-DD"
+                    placeholderTextColor={colors.textTertiary}
+                    value={checkInDate}
+                    onChangeText={setCheckInDate}
+                    style={styles.textInput}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={[typography.label, { color: colors.textSecondary, marginBottom: 8 }]}>Check-out Date (Estimate)</Text>
+                <View style={styles.inputWrap}>
+                  <Calendar size={16} color={colors.primary} style={{ marginRight: 8 }} />
+                  <TextInput
+                    placeholder="YYYY-MM-DD"
+                    placeholderTextColor={colors.textTertiary}
+                    value={checkOutDate}
+                    onChangeText={setCheckOutDate}
+                    style={styles.textInput}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </View>
+
+              <Text style={[typography.bodyS, { color: colors.textTertiary, marginTop: 12, fontStyle: 'italic' }]}>
+                * Your booking will be sent as a request. The owner needs to accept it before you can check in.
+              </Text>
+
+              <View style={{ marginTop: 24 }}>
+                <GlassButton 
+                  label="Confirm Booking Request" 
+                  onPress={handleConfirmBooking} 
+                  loading={isBooking}
+                />
+              </View>
+            </View>
+          </GlassCard>
+        </KeyboardAvoidingView>
+      </Modal>
+
       {/* Sticky Bottom Bar */}
       <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, spacing.base) }]}>
         <View style={styles.bottomBarInner}>
@@ -325,4 +411,43 @@ const styles = StyleSheet.create({
     backdropFilter: 'blur(20px)',
   },
   bottomBarInner: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: radius.xxl,
+    borderTopRightRadius: radius.xxl,
+    padding: spacing.xl,
+    minHeight: 400,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xl,
+  },
+  modalBody: {
+    gap: spacing.lg,
+  },
+  inputGroup: {
+    gap: spacing.xs,
+  },
+  inputWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: radius.lg,
+    paddingHorizontal: spacing.md,
+    height: 54,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+  },
+  textInput: {
+    flex: 1,
+    color: colors.textPrimary,
+    fontSize: 16,
+    fontWeight: '500',
+  },
 });

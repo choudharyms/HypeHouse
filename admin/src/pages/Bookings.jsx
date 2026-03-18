@@ -46,6 +46,7 @@ export const Bookings = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
+      case 'Pending': return 'bg-amber-50 text-amber-600 border-amber-100';
       case 'Active': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
       case 'Upcoming': return 'bg-blue-50 text-blue-600 border-blue-100';
       case 'Past': return 'bg-slate-50 text-slate-500 border-slate-100';
@@ -67,7 +68,7 @@ export const Bookings = () => {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 w-full lg:w-auto mt-2 custom-scrollbar">
-          {['All', 'Upcoming', 'Active', 'Past', 'Cancelled'].map((filter) => (
+          {['All', 'Pending', 'Upcoming', 'Active', 'Past', 'Cancelled'].map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
@@ -149,6 +150,24 @@ export const Bookings = () => {
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {booking.status === 'Pending' && (
+                        <>
+                          <button 
+                            onClick={() => handleStatusUpdate(booking.id, 'Upcoming')}
+                            className="p-2.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl transition-all shadow-sm"
+                            title="Accept Request"
+                          >
+                            <CheckCircle2 size={18} />
+                          </button>
+                          <button 
+                            onClick={() => handleStatusUpdate(booking.id, 'Cancelled')}
+                             className="p-2.5 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shadow-sm"
+                             title="Reject Request"
+                          >
+                            <XCircle size={18} />
+                          </button>
+                        </>
+                      )}
                       {booking.status === 'Upcoming' && (
                         <>
                           <button 
