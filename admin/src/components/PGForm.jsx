@@ -166,6 +166,54 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
                 />
               </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              <div className="space-y-3">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <Compass size={14} className="text-blue-500" />
+                  Gender Preference
+                </label>
+                <div className="flex p-1.5 bg-slate-100 rounded-2xl gap-2">
+                  {['Boys', 'Girls', 'Co-ed'].map(g => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setFormData({...formData, gender: g})}
+                      className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
+                        formData.gender === g
+                          ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200'
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <Building size={14} className="text-indigo-500" />
+                  Room Configuration
+                </label>
+                <div className="flex p-1.5 bg-slate-100 rounded-2xl gap-2">
+                  {['Single', 'Double', 'Triple'].map(r => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setFormData({...formData, room_type: r})}
+                      className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
+                        formData.room_type === r
+                          ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-slate-200'
+                          : 'text-slate-500 hover:text-slate-700'
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Section: Description & Location */}

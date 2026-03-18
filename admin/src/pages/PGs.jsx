@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, MapPin, MoreVertical, Edit2, Trash2, Eye, Plus, Search, Loader2, GraduationCap, ShieldCheck, Edit3 } from 'lucide-react';
+import { Building2, MapPin, MoreVertical, Edit2, Trash2, Eye, Plus, Search, Loader2, GraduationCap, ShieldCheck, Edit3, User, UserCheck, Users, Building } from 'lucide-react';
 import { fetchMyPGs, toggleVacancy, deletePG } from '../lib/api';
 import { PGForm } from '../components/PGForm';
 
@@ -80,10 +80,13 @@ export const PGs = () => {
                   alt={pg.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute top-4 left-4 flex gap-2">
-                   <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 shadow-sm border border-white/50">
-                    {pg.gender}
-                   </div>
+                 <div className="absolute top-4 left-4 flex gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 shadow-sm border border-white/50 flex items-center gap-1.5">
+                      {pg.gender === 'Boys' && <User size={12} className="text-blue-600" />}
+                      {pg.gender === 'Girls' && <UserCheck size={12} className="text-pink-600" />}
+                      {pg.gender === 'Co-ed' && <Users size={12} className="text-indigo-600" />}
+                      {pg.gender}
+                    </div>
                    {pg.verified && (
                      <div className="bg-blue-600 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-white shadow-lg shadow-blue-500/30 flex items-center gap-1">
                        <ShieldCheck size={12} />
@@ -133,15 +136,19 @@ export const PGs = () => {
                    </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pb-2 border-b border-slate-100">
-                  {pg.amenities?.slice(0, 3).map((a, i) => (
+                <div className="flex flex-wrap gap-2 pb-2 border-b border-slate-100 items-center">
+                  <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2 py-1 rounded-md border border-indigo-100/50 flex items-center gap-1">
+                    <Building size={10} />
+                    {pg.room_type}
+                  </span>
+                  {pg.amenities?.slice(0, 2).map((a, i) => (
                     <span key={i} className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-md">
                       {a}
                     </span>
                   ))}
-                  {pg.amenities?.length > 3 && (
+                  {pg.amenities?.length > 2 && (
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-md">
-                      +{pg.amenities.length - 3}
+                      +{pg.amenities.length - 2}
                     </span>
                   )}
                 </div>

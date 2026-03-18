@@ -41,8 +41,8 @@ export const HomeScreen = ({ navigation }) => {
 
     // Category filter
     if (activeCategory !== 'All') {
-      if (activeCategory === 'Single Room') result = result.filter(pg => pg.type === 'Single');
-      if (activeCategory === 'Double') result = result.filter(pg => pg.type === 'Double');
+      if (activeCategory === 'Single Room') result = result.filter(pg => pg.room_type === 'Single');
+      if (activeCategory === 'Double') result = result.filter(pg => pg.room_type === 'Double');
       if (activeCategory === 'Girls PG') result = result.filter(pg => pg.gender === 'Girls');
       if (activeCategory === 'Boys PG') result = result.filter(pg => pg.gender === 'Boys');
       if (activeCategory === 'Co-ed') result = result.filter(pg => pg.gender === 'Co-ed');
