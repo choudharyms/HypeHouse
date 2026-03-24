@@ -153,9 +153,14 @@ CREATE TABLE IF NOT EXISTS reviews (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id  uuid REFERENCES profiles(id) ON DELETE CASCADE,
   pg_id       uuid REFERENCES pgs(id) ON DELETE CASCADE,
-  rating      integer CHECK (rating BETWEEN 1 AND 5), comment text,
-  created_at  timestamptz DEFAULT now(), UNIQUE (student_id, pg_id)
+  booking_id  uuid REFERENCES bookings(id) ON DELETE SET NULL,
+  rating      integer CHECK (rating BETWEEN 1 AND 5), 
+  comment     text,
+  created_at  timestamptz DEFAULT now(), 
+  UNIQUE (student_id, pg_id)
 );
+
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS booking_id uuid REFERENCES bookings(id) ON DELETE SET NULL;
 
 CREATE OR REPLACE FUNCTION update_pg_rating() RETURNS trigger AS $$
 DECLARE
@@ -175,7 +180,7 @@ BEGIN
     
     RETURN NULL;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_review_change ON reviews;
 CREATE TRIGGER on_review_change 
