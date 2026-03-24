@@ -189,7 +189,11 @@ export const PGDetailScreen = ({ route, navigation }) => {
       >
         {/* Full-width Hero Image */}
         <View style={styles.heroContainer}>
-          <Image source={{ uri: pg.images[0] }} style={styles.heroImage} resizeMode="cover" />
+          <Image 
+            source={{ uri: pg.images?.[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80' }} 
+            style={styles.heroImage} 
+            resizeMode="cover" 
+          />
           <LinearGradient
             colors={['rgba(10,15,30,0)', 'rgba(10,15,30,0.8)', colors.bg]}
             locations={[0, 0.5, 1]}
@@ -215,7 +219,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
           <View style={styles.heroBottomRow}>
             <StatusPill status={pg.availability} />
             <View style={styles.ratingBadge}>
-              <Text style={[typography.labelBold, { color: colors.textPrimary }]}>★ {fullPg.rating}</Text>
+              <Text style={[typography.labelBold, { color: colors.textPrimary }]}>★ {fullPg?.rating || '0.0'}</Text>
             </View>
           </View>
         </View>
@@ -234,7 +238,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
           </View>
 
           <View style={styles.priceRow}>
-            <Text style={[typography.displayM, { color: colors.primary }]}>₹{(pg.price_per_month || 0).toLocaleString()}</Text>
+            <Text style={[typography.displayM, { color: colors.primary }]}>₹{(pg?.price_per_month || 0).toLocaleString()}</Text>
             <Text style={[typography.bodyL, { color: colors.textSecondary, marginBottom: 4, marginLeft: 4 }]}>/mo</Text>
           </View>
 
@@ -379,7 +383,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
           <View style={styles.section}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
               <Text style={[typography.headingM, { color: colors.textPrimary, marginBottom: 0 }]}>
-                Reviews ({fullPg.review_count || 0})
+                Reviews ({fullPg?.review_count || 0})
               </Text>
               <TouchableOpacity onPress={() => setShowReviewModal(true)}>
                 <Text style={[typography.bodyS, { color: colors.primary, fontWeight: '700' }]}>Write a Review</Text>
@@ -563,7 +567,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
         <View style={styles.bottomBarInner}>
           <View>
             <Text style={[typography.label, { color: colors.textSecondary }]}>Price / month</Text>
-            <Text style={[typography.headingL, { color: colors.textPrimary }]}>₹{(pg.price_per_month || 0).toLocaleString()}</Text>
+            <Text style={[typography.headingL, { color: colors.textPrimary }]}>₹{(pg?.price_per_month || 0).toLocaleString()}</Text>
           </View>
           <View style={{ width: 160 }}>
             <GlassButton label="Book Now" onPress={handleBookNow} />
