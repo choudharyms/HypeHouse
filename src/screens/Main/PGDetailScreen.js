@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import * as api from '../../lib/api';
 import MapView, { Marker } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,7 +23,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { 
   ArrowLeft, Heart, Share, Wifi, Wind, MapPin, 
   Car, Shield, Bath, Droplets, Tv, Utensils, Zap, Phone, MessageCircle,
-  Calendar
+  Calendar, Star, User
 } from 'lucide-react-native';
 
 import { colors, radius, spacing, typography } from '../../theme/tokens';
@@ -58,6 +59,28 @@ export const PGDetailScreen = ({ route, navigation }) => {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [isBooking, setIsBooking] = useState(false);
+  const { addReview } = useAppContext();
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [fullPg, setFullPg] = useState(pg);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function loadFullDetails() {
+      try {
+        setLoading(true);
+        const data = await api.fetchPGById(pg.id);
+        setFullPg(data);
+      } catch (error) {
+        console.error('Error loading PG details:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadFullDetails();
+  }, [pg.id]);
 
   const handleBookNow = () => {
     setShowBookingModal(true);
@@ -125,6 +148,39 @@ export const PGDetailScreen = ({ route, navigation }) => {
     Linking.openURL(url);
   };
 
+  const handleConfirmReview = async () => {
+    if (rating === 0) {
+      Alert.alert("Rating Required", "Please select at least 1 star.");
+      return;
+    }
+    if (!comment.trim()) {
+      Alert.alert("Comment Required", "Please write a short review.");
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    try {
+      const result = await addReview({
+        pgId: pg.id,
+        rating,
+        comment: comment.trim()
+      });
+      // Refetch details to show the new review
+      const updatedData = await api.fetchPGById(pg.id);
+      setFullPg(updatedData);
+      
+      setShowReviewModal(false);
+      setRating(0);
+      setComment('');
+      Alert.alert("Review Submitted", "Thank you for your feedback!");
+    } catch (error) {
+      console.error('Review error:', error);
+      Alert.alert("Error", error.message || "Failed to submit review.");
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -159,7 +215,7 @@ export const PGDetailScreen = ({ route, navigation }) => {
           <View style={styles.heroBottomRow}>
             <StatusPill status={pg.availability} />
             <View style={styles.ratingBadge}>
-              <Text style={[typography.labelBold, { color: colors.textPrimary }]}>★ {pg.rating}</Text>
+              <Text style={[typography.labelBold, { color: colors.textPrimary }]}>★ {fullPg.rating}</Text>
             </View>
           </View>
         </View>
@@ -318,6 +374,61 @@ export const PGDetailScreen = ({ route, navigation }) => {
               </View>
             </GlassCard>
           </View>
+
+          {/* Reviews Section */}
+          <View style={styles.section}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
+              <Text style={[typography.headingM, { color: colors.textPrimary, marginBottom: 0 }]}>
+                Reviews ({fullPg.review_count || 0})
+              </Text>
+              <TouchableOpacity onPress={() => setShowReviewModal(true)}>
+                <Text style={[typography.bodyS, { color: colors.primary, fontWeight: '700' }]}>Write a Review</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {fullPg.reviews && fullPg.reviews.length > 0 ? (
+              <View style={{ gap: spacing.md }}>
+                {fullPg.reviews.slice(0, 3).map((rev, i) => (
+                  <View key={i} style={styles.reviewCard}>
+                    <View style={styles.reviewHeader}>
+                      <View style={styles.reviewUser}>
+                        <View style={styles.reviewAvatar}>
+                          <User size={14} color={colors.primary} />
+                        </View>
+                        <View>
+                          <Text style={[typography.bodyM, { color: colors.textPrimary, fontWeight: '600' }]}>
+                            {rev.profiles?.full_name || 'Student'}
+                          </Text>
+                          <Text style={[typography.bodyS, { color: colors.textTertiary }]}>
+                            {new Date(rev.created_at).toLocaleDateString()}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.reviewRating}>
+                        <Star size={12} color="#FFD700" fill="#FFD700" />
+                        <Text style={[typography.label, { color: colors.textPrimary, marginLeft: 4 }]}>{rev.rating}</Text>
+                      </View>
+                    </View>
+                    <Text style={[typography.bodyM, { color: colors.textSecondary }]}>{rev.comment}</Text>
+                  </View>
+                ))}
+                {fullPg.reviews.length > 3 && (
+                  <TouchableOpacity 
+                    onPress={() => navigation.navigate('AllReviews', { pg: fullPg })}
+                    style={styles.viewAllBtn}
+                  >
+                    <Text style={[typography.bodyM, { color: colors.textSecondary }]}>View All Reviews</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ) : (
+              <View style={styles.emptyReviews}>
+                <Text style={[typography.bodyM, { color: colors.textTertiary, textAlign: 'center' }]}>
+                  No reviews yet. Be the first to review!
+                </Text>
+              </View>
+            )}
+          </View>
           
         </Animated.View>
       </ScrollView>
@@ -386,6 +497,65 @@ export const PGDetailScreen = ({ route, navigation }) => {
             </View>
           </GlassCard>
         </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Review Modal */}
+      <Modal
+        visible={showReviewModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowReviewModal(false)}
+      >
+        <TouchableOpacity 
+          activeOpacity={1} 
+          onPress={() => setShowReviewModal(false)} 
+          style={styles.modalOverlay}
+        >
+          <Pressable onPress={(e) => e.stopPropagation()} style={{ width: '90%' }}>
+            <GlassCard style={styles.reviewModalContent}>
+              <Text style={[typography.headingM, { color: colors.textPrimary, textAlign: 'center' }]}>Rate your Experience</Text>
+              
+              <View style={styles.starRow}>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <TouchableOpacity key={s} onPress={() => setRating(s)}>
+                    <Star 
+                      size={32} 
+                      color={s <= rating ? "#FFD700" : colors.textTertiary} 
+                      fill={s <= rating ? "#FFD700" : 'transparent'} 
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={[typography.label, { color: colors.textSecondary, marginBottom: 8 }]}>Your Review</Text>
+                <TextInput
+                  placeholder="Tell others about your stay..."
+                  placeholderTextColor={colors.textTertiary}
+                  value={comment}
+                  onChangeText={setComment}
+                  multiline
+                  style={styles.textArea}
+                />
+              </View>
+
+              <View style={{ marginTop: 24, flexDirection: 'row', gap: spacing.md }}>
+                <GlassButton 
+                  label="Cancel" 
+                  variant="ghost"
+                  onPress={() => setShowReviewModal(false)} 
+                  style={{ flex: 1 }}
+                />
+                <GlassButton 
+                  label="Submit" 
+                  onPress={handleConfirmReview} 
+                  loading={isSubmittingReview}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            </GlassCard>
+          </Pressable>
+        </TouchableOpacity>
       </Modal>
 
       {/* Sticky Bottom Bar */}
@@ -531,6 +701,73 @@ const styles = StyleSheet.create({
     backgroundColor: colors.glassBg,
     padding: spacing.md,
     borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+  },
+  reviewCard: {
+    backgroundColor: colors.glassBg,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+  },
+  reviewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: spacing.sm,
+  },
+  reviewUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  reviewAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.full,
+    backgroundColor: colors.primaryDim,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  reviewRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,215,0,0.1)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: radius.sm,
+  },
+  viewAllBtn: {
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+  },
+  emptyReviews: {
+    padding: spacing.xl,
+    backgroundColor: 'rgba(255,255,255,0.02)',
+    borderRadius: radius.lg,
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+  },
+  reviewModalContent: {
+    padding: spacing.xl,
+    borderRadius: radius.xxl,
+    gap: spacing.xl,
+  },
+  starRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.md,
+  },
+  textArea: {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    height: 120,
+    color: colors.textPrimary,
+    fontSize: 16,
+    textAlignVertical: 'top',
     borderWidth: 1,
     borderColor: colors.glassBorder,
   },

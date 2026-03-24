@@ -157,6 +157,31 @@ CREATE TABLE IF NOT EXISTS reviews (
   created_at  timestamptz DEFAULT now(), UNIQUE (student_id, pg_id)
 );
 
+CREATE OR REPLACE FUNCTION update_pg_rating() RETURNS trigger AS $$
+DECLARE
+    target_pg_id uuid;
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        target_pg_id := OLD.pg_id;
+    ELSE
+        target_pg_id := NEW.pg_id;
+    END IF;
+
+    UPDATE pgs
+    SET 
+        rating = (SELECT COALESCE(ROUND(AVG(rating)::numeric, 1), 0) FROM reviews WHERE pg_id = target_pg_id),
+        review_count = (SELECT COUNT(*) FROM reviews WHERE pg_id = target_pg_id)
+    WHERE id = target_pg_id;
+    
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS on_review_change ON reviews;
+CREATE TRIGGER on_review_change 
+AFTER INSERT OR UPDATE OR DELETE ON reviews
+FOR EACH ROW EXECUTE FUNCTION update_pg_rating();
+
 CREATE TABLE IF NOT EXISTS notifications (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id     uuid REFERENCES profiles(id) ON DELETE CASCADE,

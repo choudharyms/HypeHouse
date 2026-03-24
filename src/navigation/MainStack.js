@@ -10,6 +10,7 @@ import { ProfileScreen } from '../screens/Main/ProfileScreen';
 import { PGDetailScreen } from '../screens/Main/PGDetailScreen';
 import { BookingDetailScreen } from '../screens/Main/BookingDetailScreen';
 import { EditProfileScreen } from '../screens/Main/EditProfileScreen';
+import { AllReviewsScreen } from '../screens/Main/AllReviewsScreen';
 
 import { TabBar } from '../components/ui/TabBar';
 import { Home, Heart, Calendar, User } from 'lucide-react-native';
@@ -56,6 +57,7 @@ export const MainStack = () => {
       <Stack.Screen name="PGDetail" component={PGDetailScreen} />
       <Stack.Screen name="BookingDetail" component={BookingDetailScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="AllReviews" component={AllReviewsScreen} />
     </Stack.Navigator>
   );
 };

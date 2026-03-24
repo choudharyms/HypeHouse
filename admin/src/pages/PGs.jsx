@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, MapPin, MoreVertical, Edit2, Trash2, Eye, Plus, Search, Loader2, GraduationCap, ShieldCheck, Edit3, User, UserCheck, Users, Building } from 'lucide-react';
+import { Building2, MapPin, MoreVertical, Edit2, Trash2, Eye, Plus, Search, Loader2, GraduationCap, ShieldCheck, Edit3, User, UserCheck, Users, Building, Star } from 'lucide-react';
 import { fetchMyPGs, toggleVacancy, deletePG } from '../lib/api';
 import { PGForm } from '../components/PGForm';
 
@@ -133,6 +133,11 @@ export const PGs = () => {
                    </div>
                    <div className="bg-slate-100 px-3 py-1 rounded-lg text-slate-600 text-[10px] font-black uppercase">
                      {pg.distance_from_college || '0.5'} km
+                   </div>
+                   <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1 rounded-lg border border-yellow-100/50">
+                     <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                     <span className="text-yellow-700 font-black text-[11px]">{pg.rating || '0.0'}</span>
+                     <span className="text-slate-400 text-[10px] font-bold">({pg.review_count || 0})</span>
                    </div>
                 </div>
 

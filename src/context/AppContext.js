@@ -113,6 +113,7 @@ export const AppProvider = ({ children }) => {
         bookings,
         addBooking,
         cancelBooking,
+        addReview: api.addReview,
         isLoading
       }}
     >
