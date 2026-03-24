@@ -356,6 +356,11 @@ export const PGDetailScreen = ({ route, navigation }) => {
                 <View style={{ flex: 1 }}>
                   <Text style={[typography.headingM, { color: colors.textPrimary }]}>{pg.profiles?.full_name || 'Owner'}</Text>
                   <Text style={[typography.bodyS, { color: colors.textSecondary }]}>Verified Owner</Text>
+                  {pg.contact_phone && (
+                    <Text style={[typography.labelBold, { color: colors.primary, marginTop: 4 }]}>
+                      +91 {pg.contact_phone}
+                    </Text>
+                  )}
                 </View>
               </View>
               <View style={styles.ownerActions}>

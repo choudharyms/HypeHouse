@@ -5,6 +5,7 @@ import { MapPicker } from './MapPicker';
 
 export const PGForm = ({ pg = null, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [newAmenity, setNewAmenity] = useState('');
   const [formData, setFormData] = useState(pg || {
     name: '',
@@ -22,7 +23,10 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
     total_rooms: 1,
     available_rooms: 1,
     amenities: ['Wifi', 'CCTV', 'Meals'],
-    images: []
+    images: [],
+    contact_name: '',
+    contact_phone: '',
+    show_phone: true
   });
 
   const amenitiesList = ['Wifi', 'AC', 'Power Backup', 'Laundry', 'CCTV', 'Meals', 'Parking', 'Cleaning'];
@@ -53,7 +57,7 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    setLoading(true);
+    setUploadingImages(true);
     try {
       const uploadPromises = files.map(file => uploadPGImage(pg?.id || 'temp', file));
       const urls = await Promise.all(uploadPromises);
@@ -65,7 +69,7 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
       console.error(err);
       alert("Failed to upload images: " + err.message);
     } finally {
-      setLoading(false);
+      setUploadingImages(false);
     }
   };
 
@@ -219,6 +223,42 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
             </div>
           </div>
 
+          {/* Section: Contact Information */}
+          <div className="space-y-6 pt-4">
+            <h3 className="text-sm font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
+              <span className="w-8 h-px bg-blue-100"></span>
+              Contact Details
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <User size={14} className="text-blue-500" />
+                  Contact Person
+                </label>
+                <input
+                  required
+                  className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-white/50"
+                  value={formData.contact_name}
+                  onChange={e => setFormData({...formData, contact_name: e.target.value})}
+                  placeholder="e.g. Mr. Sharma"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                  <Phone size={14} className="text-indigo-500" />
+                  Phone Number
+                </label>
+                <input
+                  required
+                  className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all bg-white/50"
+                  value={formData.contact_phone}
+                  onChange={e => setFormData({...formData, contact_phone: e.target.value})}
+                  placeholder="e.g. 9876543210"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Section: Description & Location */}
           <div className="space-y-6 pt-4">
             <h3 className="text-sm font-black text-indigo-600 uppercase tracking-widest flex items-center gap-2">
@@ -333,14 +373,15 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
               ))}
               <label className="aspect-[4/3] border-2 border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50/30 transition-all cursor-pointer">
                 <div className="bg-slate-50 p-3 rounded-full mb-2">
-                  <Upload size={24} />
+                  {uploadingImages ? <Loader2 className="animate-spin text-blue-500" size={24} /> : <Upload size={24} />}
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Add Photo</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{uploadingImages ? 'Uploading...' : 'Add Photo'}</span>
                 <input 
                   type="file" 
                   className="hidden" 
                   accept="image/*" 
                   multiple 
+                  disabled={uploadingImages}
                   onChange={handleImageUpload} 
                 />
               </label>
