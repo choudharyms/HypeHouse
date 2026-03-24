@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Upload, Plus, Trash2, Loader2, Save, Building2, MapPin, Target, Compass, Sparkles, Building, Briefcase, GraduationCap } from 'lucide-react';
+import { X, Upload, Plus, Trash2, Loader2, Save, Building2, MapPin, Target, Compass, Sparkles, Building, Briefcase, GraduationCap, Map as MapIcon } from 'lucide-react';
 import { createPG, updatePG, uploadPGImage } from '../lib/api';
+import { MapPicker } from './MapPicker';
 
 export const PGForm = ({ pg = null, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,8 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
     gender: 'Boys',
     address: '',
     city: '',
+    lat: null,
+    lng: null,
     price_per_month: 5000,
     security_deposit: 5000,
     total_rooms: 1,
@@ -242,6 +245,20 @@ export const PGForm = ({ pg = null, onClose, onSuccess }) => {
                 onChange={e => setFormData({...formData, address: e.target.value})}
                 placeholder="House number, Street, Area..."
               />
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                <MapIcon size={14} className="text-blue-500" />
+                Select Map Location
+              </label>
+              <div className="p-4 bg-slate-50 rounded-3xl border border-slate-200/50">
+                <MapPicker 
+                  lat={formData.lat} 
+                  lng={formData.lng} 
+                  onChange={(lat, lng) => setFormData({...formData, lat, lng})} 
+                />
+              </div>
             </div>
           </div>
 

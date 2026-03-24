@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -111,6 +112,17 @@ export const PGDetailScreen = ({ route, navigation }) => {
 
   const handleShare = () => {
     Alert.alert("Share", "Share functionality would open native share sheet.");
+  };
+
+  const handleOpenMaps = () => {
+    const lat = pg.lat || 12.9716;
+    const lng = pg.lng || 77.5946;
+    const label = pg.name;
+    const url = Platform.select({
+      ios: `maps:0,0?q=${label}@${lat},${lng}`,
+      android: `geo:0,0?q=${lat},${lng}(${label})`
+    });
+    Linking.openURL(url);
   };
 
   return (
@@ -226,6 +238,51 @@ export const PGDetailScreen = ({ route, navigation }) => {
                 <Text style={[typography.bodyM, { color: colors.textSecondary }]}>{rule}</Text>
               </View>
             ))}
+          </View>
+
+          {/* Map Section */}
+          <View style={styles.section}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.md }}>
+              <Text style={[typography.headingM, { color: colors.textPrimary, marginBottom: 0 }]}>Location</Text>
+              <TouchableOpacity onPress={handleOpenMaps}>
+                <Text style={[typography.bodyS, { color: colors.primary, fontWeight: '700' }]}>Get Directions</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.mapContainer}>
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: pg.lat || 12.9716,
+                  longitude: pg.lng || 77.5946,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
+                }}
+                scrollEnabled={false}
+                zoomEnabled={false}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: pg.lat || 12.9716,
+                    longitude: pg.lng || 77.5946,
+                  }}
+                  title={pg.name}
+                  description={pg.address}
+                />
+              </MapView>
+              {!pg.lat && (
+                <View style={styles.mapOverlay}>
+                  <Text style={[typography.bodyS, { color: colors.textTertiary, textAlign: 'center' }]}>
+                    Exact location not provided by owner
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.locationDetail}>
+              <MapPin size={16} color={colors.textSecondary} />
+              <Text style={[typography.bodyM, { color: colors.textSecondary, marginLeft: 8, flex: 1 }]}>
+                {pg.address}
+              </Text>
+            </View>
           </View>
 
           {/* Owner Section */}
@@ -362,7 +419,6 @@ const styles = StyleSheet.create({
     width: 44, height: 44, borderRadius: radius.full,
     backgroundColor: colors.glassBg, borderWidth: 1, borderColor: colors.glassBorder,
     alignItems: 'center', justifyContent: 'center',
-    backdropFilter: 'blur(10px)',
   },
   heroBottomRow: {
     position: 'absolute', bottom: spacing.xl, left: spacing.xl, right: spacing.xl,
@@ -409,7 +465,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(10,15,30,0.85)',
     borderTopWidth: 1, borderTopColor: colors.glassBorder,
     paddingTop: spacing.base, paddingHorizontal: spacing.xl,
-    backdropFilter: 'blur(20px)',
   },
   bottomBarInner: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   modalOverlay: {
@@ -450,5 +505,33 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontSize: 16,
     fontWeight: '500',
+  },
+  mapContainer: {
+    height: 180,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
+    backgroundColor: colors.glassBg,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+    marginBottom: spacing.md,
+  },
+  map: {
+    flex: 1,
+  },
+  mapOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(10,15,30,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+  },
+  locationDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.glassBg,
+    padding: spacing.md,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
   },
 });
