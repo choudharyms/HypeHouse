@@ -101,6 +101,26 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const addReview = async (reviewData) => {
+    try {
+      const newReview = await api.addReview(reviewData);
+      
+      // Update the specific PG in the global list to reflect the new rating
+      // We fetch the updated PG from the server to get the exact trigger-calculated rating
+      const updatedPg = await api.fetchPGById(reviewData.pgId);
+      setPgs(prev => prev.map(p => p.id === reviewData.pgId ? {
+        ...p,
+        rating: updatedPg.rating,
+        review_count: updatedPg.review_count
+      } : p));
+      
+      return newReview;
+    } catch (error) {
+      console.error('Add review error:', error);
+      throw error;
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -113,7 +133,7 @@ export const AppProvider = ({ children }) => {
         bookings,
         addBooking,
         cancelBooking,
-        addReview: api.addReview,
+        addReview,
         isLoading
       }}
     >
