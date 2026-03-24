@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -126,11 +126,11 @@ export const PGDetailScreen = ({ route, navigation }) => {
 
 
   const handleCall = () => {
-    Linking.openURL(`tel:${pg.ownerPhone}`);
+    Linking.openURL(`tel:${pg.contact_phone}`);
   };
 
   const handleWhatsApp = () => {
-    Linking.openURL(`whatsapp://send?phone=${pg.ownerPhone}`);
+    Linking.openURL(`whatsapp://send?phone=${pg.contact_phone}`);
   };
 
   const handleShare = () => {
@@ -347,10 +347,10 @@ export const PGDetailScreen = ({ route, navigation }) => {
             <GlassCard noPadding style={styles.ownerCard}>
               <View style={styles.ownerRow}>
                 <View style={styles.ownerAvatar}>
-                  <Text style={[typography.headingM, { color: colors.primary }]}>{pg.owner?.full_name?.charAt(0) || 'O'}</Text>
+                  <Text style={[typography.headingM, { color: colors.primary }]}>{pg.profiles?.full_name?.charAt(0) || 'O'}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={[typography.headingM, { color: colors.textPrimary }]}>{pg.owner?.full_name || 'Owner'}</Text>
+                  <Text style={[typography.headingM, { color: colors.textPrimary }]}>{pg.profiles?.full_name || 'Owner'}</Text>
                   <Text style={[typography.bodyS, { color: colors.textSecondary }]}>Verified Owner</Text>
                 </View>
               </View>
