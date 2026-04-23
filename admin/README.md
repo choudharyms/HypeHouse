@@ -1,16 +1,33 @@
-# React + Vite
+# HypeHouse Admin Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The HypeHouse Admin Dashboard is a web application built for property owners to manage their PG listings, bookings, and profile information.
 
-Currently, two official plugins are available:
+## 🚀 Features
+- **Property Management**: List new PGs with details like room types, pricing, and amenities.
+- **Image Management**: Integrated with Supabase Storage for property photos.
+- **Booking Tracking**: Real-time view of current and upcoming bookings.
+- **Role-Based Access**: Secure login for property owners using Supabase Auth.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 💻 Technical Details
+- **Framework**: React 19 + Vite 8
+- **Styling**: Tailwind CSS
+- **Routing**: React Router DOM (v7)
+- **Maps**: Leaflet (React Leaflet) for location management.
+- **State Management**: React Context / Hooks
 
-## React Compiler
+## 🛠️ Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Ensure you have the environment variables configured in the root `.env` or as per your deployment environment.
 
-## Expanding the ESLint configuration
+### Scripts
+- `npm run dev`: Starts the development server.
+- `npm run build`: Builds the production-ready application.
+- `npm run lint`: Runs ESLint for code quality.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🌐 Deployment
+The dashboard is designed to be compatible with platforms like Vercel or Netlify.
